@@ -1,5 +1,4 @@
 // ==UserScript==
-// @name:ja         ぷにる用支部アドブロック
 // @name            Pixiv Ads Blocker
 // @version         2.0
 // @author          kuon
