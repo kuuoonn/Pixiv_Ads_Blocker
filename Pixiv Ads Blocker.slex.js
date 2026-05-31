@@ -9,42 +9,54 @@
 // @include         http://www.pixiv.net/*
 // ==/UserScript==
 
-
 (function() {
     'use strict';
 
-    // スレイプニル用の最強CSS注入関数
+    // スレイプニルが起動した瞬間に動くCSS魔法
     function injectSleipnirStyle() {
-        // すでに流し込み済みならスキップ
         if (document.getElementById('sleipnir-adblock-style')) return;
 
-        // headタグ、またはbodyタグ、最悪でもdocumentElementを探す
         const target = document.head || document.body || document.documentElement;
         if (target) {
             const style = document.createElement('style');
             style.id = 'sleipnir-adblock-style';
             style.innerHTML = `
-                [id^="adsdk--"],
-                [class*="ad-frame"],
-                [class*="ad-frame-container"] {
+                div[id*="adsdk"], 
+                div[class*="ad-frame"],
+                .ad-frame-container,
+                a[href*="xn--pckua2a7gp15o89zb.com"], 
+                img[src*="ads-pixiv.net"] {
                     display: none !important;
                     height: 0px !important;
                     visibility: hidden !important;
-                    opacity: 0 !important;
-                    pointer-events: none !important;
+                    position: absolute !important;
+                    top: -9999px !important;
                 }
             `;
             target.appendChild(style);
         }
     }
 
-    // 【対策】スレイプニルの気まぐれな起動タイミングに合わせて「4重」に実行する
-    injectSleipnirStyle(); // 1発目：起動した瞬間
+    // 求人ボックスのリンクを親玉ごと道連れにする関数
+    function heavyClean() {
+        const badLinks = document.querySelectorAll('a[href*="xn--pckua2a7gp15o89zb.com"]');
+        badLinks.forEach(link => {
+            const container = link.closest('div');
+            if (container) {
+                container.style.display = 'none';
+            }
+        });
+    }
 
-    document.addEventListener('DOMContentLoaded', injectSleipnirStyle); // 2発目：HTML読込時
-    window.addEventListener('load', injectSleipnirStyle); // 3発目：全部読込時
+    // スレイプニルの遅い起動タイミングに合わせて、
+    // 動けるようになった瞬間に最速でCSSをブチ込む
+    injectSleipnirStyle();
 
-    // 4発目：最終手段（後から湧き出る広告用に1秒ごとにCSSを再注入し続ける）
-    setInterval(injectSleipnirStyle, 1000);
+    // ページが読み込まれた後、1秒おきにパトロールして求人ボックスの息の根を止める
+    window.addEventListener('load', () => {
+        injectSleipnirStyle();
+        heavyClean();
+        setInterval(heavyClean, 1000);
+    });
 
 })();
