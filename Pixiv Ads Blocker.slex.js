@@ -5,8 +5,7 @@
 // @author          kuon
 // @description     Ads blocker for Pixiv.
 // @description:ja  素人自作＆自分用、Pixivの広告削除エクステンション
-// @include         https://www.pixiv.net/*
-// @include         http://www.pixiv.net/*
+// @match           https://www.pixiv.net/*
 // @require         jquery
 // ==/UserScript==
 
