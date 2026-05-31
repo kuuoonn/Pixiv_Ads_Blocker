@@ -7,24 +7,38 @@
 // @description:ja  素人自作＆自分用、Pixivの広告削除エクステンション
 // @include         https://www.pixiv.net/*
 // @include         http://www.pixiv.net/*
-// @require         api
+// @require         jquery
 // ==/UserScript==
 
-(function() {
-    'use strict';
 
-    SLEX_addStyle(`
-        div[id*="adsdk"], 
-        div[class*="ad-frame"],
-        .ad-frame-container,
-        a[href*="xn--pckua2a7gp15o89zb.com"], 
-        img[src*="ads-pixiv.net"] {
-            display: none !important;
-            height: 0px !important;
-            visibility: hidden !important;
-            position: absolute !important;
-            top: -9999px !important;
+function clearAds(node) {
+    if (node.nodeType !== 1) return;
+
+
+    const targetAd = node.id?.startsWith('adsdk--') || node.className?.includes?.('ad-frame')
+        ? node 
+        : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"]');
+
+    if (targetAd) {
+
+        targetAd.style.display = 'none';
+        targetAd.style.height = '0px';
+        targetAd.style.visibility = 'hidden';
+    }
+}
+
+const pixivFinalObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+            clearAds(node);
         }
-    `);
+    }
+});
+pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-})();
+
+$(function() {
+    $('[id^="adsdk--"], [class*="ad-frame"]').each(function() {
+        clearAds(this);
+    });
+});
