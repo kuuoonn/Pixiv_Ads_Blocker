@@ -13,13 +13,11 @@
 function clearAds(node) {
     if (node.nodeType !== 1) return;
 
-
     const targetAd = node.id?.startsWith('adsdk--') || node.className?.includes?.('ad-frame')
-        ? node 
-        : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"]');
+        ? node
+        : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"], [class*="t_novel_comment_section"]');
 
     if (targetAd) {
-
         targetAd.style.display = 'none';
         targetAd.style.height = '0px';
         targetAd.style.visibility = 'hidden';
@@ -35,7 +33,6 @@ const pixivFinalObserver = new MutationObserver((mutations) => {
 });
 pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-
-$('[id^="adsdk--"], [class*="ad-frame"]').each(function() {
+$('[id^="adsdk--"], [class*="ad-frame"], [class*="t_novel_comment_section"]').each(function() {
     clearAds(this);
 });
