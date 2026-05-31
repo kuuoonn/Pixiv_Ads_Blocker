@@ -9,6 +9,8 @@
 // @include         http://www.pixiv.net/*
 // ==/UserScript==
 
+
+
 function clearAds(node) {
     if (node.nodeType !== 1) return;
 
