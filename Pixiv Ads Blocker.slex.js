@@ -11,7 +11,7 @@
 
 
 function removeAds() {
-  $('div[id^="adsdk--"]').html('');
+  $('div[id^="adsdk--"]').html('').css({'display': 'none',});
   $('div[class*="ad-frame"]').remove();
 }
 
