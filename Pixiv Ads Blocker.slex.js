@@ -36,8 +36,6 @@ const pixivFinalObserver = new MutationObserver((mutations) => {
 pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
 
 
-$(function() {
-    $('[id^="adsdk--"], [class*="ad-frame"]').each(function() {
-        clearAds(this);
-    });
+$('[id^="adsdk--"], [class*="ad-frame"]').each(function() {
+    clearAds(this);
 });
