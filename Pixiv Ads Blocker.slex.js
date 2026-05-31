@@ -10,29 +10,12 @@
 // ==/UserScript==
 
 
-function clearAds(node) {
-    if (node.nodeType !== 1) return;
-
-    const targetAd = node.id?.startsWith('adsdk--') || node.className?.includes?.('ad-frame')
-        ? node
-        : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"], [class*="t_novel_comment_section"]');
-
-    if (targetAd) {
-        targetAd.style.display = 'none';
-        targetAd.style.height = '0px';
-        targetAd.style.visibility = 'hidden';
-    }
+function removeAds() {
+  $('div[id^="adsdk--"]').remove();
+  $('div[class^="ad-frame"]').remove();
 }
 
-const pixivFinalObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-            clearAds(node);
-        }
-    }
-});
-pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
-
-$('[id^="adsdk--"], [class*="ad-frame"], [class*="t_novel_comment_section"]').each(function() {
-    clearAds(this);
-});
+setTimeout(() => {
+  removeAds();
+  setInterval(removeAds, 1000);
+}, 1000);
