@@ -13,51 +13,44 @@
 (function() {
     'use strict';
 
-    // スレイプニルが起動した瞬間に動くCSS魔法
-    function injectSleipnirStyle() {
-        if (document.getElementById('sleipnir-adblock-style')) return;
-
-        const target = document.head || document.body || document.documentElement;
-        if (target) {
-            const style = document.createElement('style');
-            style.id = 'sleipnir-adblock-style';
-            style.innerHTML = `
-                div[id*="adsdk"], 
-                div[class*="ad-frame"],
-                .ad-frame-container,
-                a[href*="xn--pckua2a7gp15o89zb.com"], 
-                img[src*="ads-pixiv.net"] {
-                    display: none !important;
-                    height: 0px !important;
-                    visibility: hidden !important;
-                    position: absolute !important;
-                    top: -9999px !important;
-                }
-            `;
-            target.appendChild(style);
+    // 広告を跡地ごと宇宙の彼方に葬り去る最強CSS
+    const cssRule = `
+        div[id*="adsdk"], 
+        div[class*="ad-frame"],
+        .ad-frame-container,
+        a[href*="xn--pckua2a7gp15o89zb.com"], 
+        img[src*="ads-pixiv.net"] {
+            display: none !important;
+            height: 0px !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            top: -9999px !important;
         }
-    }
+    `;
 
-    // 求人ボックスのリンクを親玉ごと道連れにする関数
-    function heavyClean() {
-        const badLinks = document.querySelectorAll('a[href*="xn--pckua2a7gp15o89zb.com"]');
-        badLinks.forEach(link => {
-            const container = link.closest('div');
-            if (container) {
-                container.style.display = 'none';
+    function injectStyleLoop() {
+        let styleEl = document.getElementById('sleipnir-loop-style');
+        
+        if (!styleEl) {
+            const target = document.head || document.body || document.documentElement;
+            if (target) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'sleipnir-loop-style';
+                styleEl.innerHTML = cssRule;
+                target.appendChild(styleEl);
             }
-        });
+        } else {
+            if (styleEl.innerHTML !== cssRule) {
+                styleEl.innerHTML = cssRule;
+            }
+        }
+
+        // 2秒（2000ms）ごとに、自分自身をずっと呼び出し続けてパトロール
+        setTimeout(injectStyleLoop, 2000);
     }
 
-    // スレイプニルの遅い起動タイミングに合わせて、
-    // 動けるようになった瞬間に最速でCSSをブチ込む
-    injectSleipnirStyle();
+    // 最初のノックを開始
+    injectStyleLoop();
 
-    // ページが読み込まれた後、1秒おきにパトロールして求人ボックスの息の根を止める
-    window.addEventListener('load', () => {
-        injectSleipnirStyle();
-        heavyClean();
-        setInterval(heavyClean, 1000);
-    });
-
+})();
 })();
