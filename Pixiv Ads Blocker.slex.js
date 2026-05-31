@@ -11,8 +11,8 @@
 
 
 function removeAds() {
-  $('div[id^="adsdk--"]').remove();
-  $('div[class^="ad-frame"]').remove();
+  $('div[id^="adsdk--"]').replaceWith('<div style="display:none; height:0px;"></div>');
+  $('div[class*="ad-frame"]').replaceWith('<div style="display:none; height:0px;"></div>');
 }
 
 setTimeout(() => {
