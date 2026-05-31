@@ -9,38 +9,44 @@
 // @require         jquery
 // ==/UserScript==
 
-// 【共通のお掃除関数】
-function clearAds(node) {
-    if (node.nodeType !== 1) return;
+(function() {
+    'use strict';
 
-    // IDが「adsdk--」で始まる、または、クラス名に「ad-frame」が含まれるものを探す
-    // ※ [class*="ad-frame"] にすることで、「abc-ad-frame-123」みたいな名前でも全キャッチします
-    const targetAd = node.id?.startsWith('adsdk--') || node.className?.includes?.('ad-frame')
-        ? node
-        : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"]');
+    // 【新兵器】最速で「広告は最初から非表示」というルール（CSS）をページにブチ込む
+    const style = document.createElement('style');
+    style.innerHTML = `
+        [id^="adsdk--"], 
+        [class*="ad-frame"], 
+        [class*="ad-frame-container"] {
+            display: none !important;
+            height: 0px !important;
+            visibility: hidden !important;
+        }
+    `;
+    // HTMLの頭（document.documentElement）に最速でくっつける
+    document.documentElement.appendChild(style);
 
-    if (targetAd) {
-        // 発見したら存在を「無」にする
-        targetAd.style.display = 'none';
-        targetAd.style.height = '0px';
-        targetAd.style.visibility = 'hidden';
-    }
-}
+    // 【バックアップ】念のため後から湧き出る特殊なノード対策の監視員
+    function clearAds(node) {
+        if (!node || node.nodeType !== 1) return;
+        const targetAd = node.id?.startsWith('adsdk--') || 
+                         node.className?.includes?.('ad-frame') || 
+                         node.className?.includes?.('t_novel_comment_section')
+            ? node 
+            : node.querySelector?.('[id^="adsdk--"], [class*="ad-frame"], [class*="t_novel_comment_section"]');
 
-// 1. 【後から湧く広告用】監視スタート
-const pixivFinalObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-            clearAds(node);
+        if (targetAd) {
+            targetAd.style.display = 'none';
         }
     }
-});
-pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-// 2. 【最初からある広告用】ページが開いた瞬間に、今あるやつを一度全部チェックする
-$(function() {
-    // 画面内にあるターゲットを一斉捜索して処理
-    $('[id^="adsdk--"], [class*="ad-frame"]').each(function() {
-        clearAds(this);
+    const pixivFinalObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                clearAds(node);
+            }
+        }
     });
-});
+    pixivFinalObserver.observe(document.documentElement, { childList: true, subtree: true });
+
+})();
