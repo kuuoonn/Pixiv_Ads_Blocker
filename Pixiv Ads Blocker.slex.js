@@ -14,8 +14,5 @@ function removeAds() {
   $('div[id^="adsdk--"]').html('').css({'display': 'none',});
   $('div[class*="ad-frame"]').remove();
 }
-
-setTimeout(() => {
-  removeAds();
-  setInterval(removeAds, 1000);
-}, 1000);
+removeAds();
+setInterval(removeAds, 1000);
