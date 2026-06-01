@@ -7,5 +7,3 @@
 <br>
 リンクをSleipnirから踏むとインストール↓<br>
 https://raw.githubusercontent.com/kuuoonn/Pixiv_Ads_Blocker/refs/heads/main/Pixiv%20Ads%20Blocker.slex.js<br>
-API版（SLEX_addStyle）<br>
-https://raw.githubusercontent.com/kuuoonn/Pixiv_Ads_Blocker/refs/heads/main/Pixiv%20Ads%20Blocker%20CSSapi.slex.js<br>
